@@ -42,6 +42,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(mongoSanitize())
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
 const store = MongoDBStore.create({
     mongoUrl: dbUrl,
     //If you are using express-session >= 1.10.0 and don't want to resave all the session on database every single time that the user refreshes the page,
@@ -51,7 +53,7 @@ const store = MongoDBStore.create({
     //does not matter how many request's are made (with the exception of those that change something on the session data)
 
     crypto: {
-        secret: 'thisshouldbeabettersecret!',
+        secret,
     }
 })
 
@@ -64,7 +66,7 @@ const sessionConfig = {
     //passing our mongo db store to session config:
     store, //aka store: store,
     name: 'session',
-    secret: 'thisshouldbeabettersecret!',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
